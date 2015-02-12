@@ -1,5 +1,6 @@
 class Api::V1::RegistrationsController < ApplicationController
-  skip_before_action :verify_authenticity_token#, if: :json_request?
+  #TODO: Might want to move this to a upper class
+  protect_from_forgery with: :null_session
   before_filter :validate_params
 
   def create
@@ -7,6 +8,7 @@ class Api::V1::RegistrationsController < ApplicationController
     if user.valid?
       render json: user.as_json, status: :ok
     else
+      #TODO: Add token for user validation in api requests
       render json: {error: user.errors.messages}, status: :bad_request
     end
   end
