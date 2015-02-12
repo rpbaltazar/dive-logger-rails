@@ -3,7 +3,12 @@ class Api::V1::RegistrationsController < ApplicationController
   before_filter :validate_params
 
   def create
-    render json: {}, status: :ok
+    user = User.create email: params["email"], password: params["password"], password_confirmation: params["password_confirmation"]
+    if user.valid?
+      render json: user.as_json, status: :ok
+    else
+      render json: {error: user.errors.messages}, status: :bad_request
+    end
   end
 
   private
