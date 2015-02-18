@@ -19,6 +19,7 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'haml-rails'
 
 gem 'devise'
+gem 'simple_token_authentication'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
