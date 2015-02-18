@@ -1,6 +1,10 @@
 class Api::V1::DivesController < BaseApiController
   before_filter :validate_token
 
+  def index
+    render json: current_user.dives.as_json, status: :ok
+  end
+
   def create
     dive = current_user.dives.create(dive_params)
     if dive.valid?
