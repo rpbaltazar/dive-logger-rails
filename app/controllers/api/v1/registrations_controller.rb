@@ -7,12 +7,12 @@ class Api::V1::RegistrationsController < BaseApiController
       render json: user.as_json, status: :ok
     else
       puts "Problems with the user: #{user.errors.messages}"
-      #TODO: Add token for user validation in api requests
       render json: {error: user.errors.messages}, status: :bad_request
     end
   end
 
   private
+
   def validate_params
     unless params["email"].present? && params["password"].present? && params["password_confirmation"].present?
       puts "Missing params"

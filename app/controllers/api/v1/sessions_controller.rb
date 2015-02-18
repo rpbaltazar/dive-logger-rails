@@ -1,5 +1,6 @@
 class Api::V1::SessionsController < BaseApiController
   before_filter :validate_params, only: [:create]
+  before_filter :validate_token, only: [:destroy]
 
   def create
     user = User.find_for_database_authentication email: params["email"]
@@ -7,7 +8,7 @@ class Api::V1::SessionsController < BaseApiController
 
     if user.valid_password? params["password"]
       sign_in user
-      render json: user.as_json, status: :ok
+      render json: user.as_json, status: :created
       return
     end
 
@@ -15,13 +16,9 @@ class Api::V1::SessionsController < BaseApiController
   end
 
   def destroy
-    if current_user
-      current_user.authentication_token = ""
-      current_user.save
-      render json: {}, status: :ok
-    else
-      return invalid_login_attempt
-    end
+    current_user.authentication_token = ""
+    current_user.save
+    render json: {}, status: :ok
   end
 
   private
@@ -30,10 +27,5 @@ class Api::V1::SessionsController < BaseApiController
     unless params["email"].present? && params["password"].present?
       render json: {error: "Missing parameters"}, status: :bad_request
     end
-  end
-
-  def invalid_login_attempt
-    render json: {error: "Invalid login"}, status: :bad_request
-    return
   end
 end
