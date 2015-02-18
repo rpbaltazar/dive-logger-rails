@@ -1,5 +1,5 @@
 class Api::V1::SessionsController < BaseApiController
-  before_filter :validate_params
+  before_filter :validate_params, only: [:create]
 
   def create
     user = User.find_for_database_authentication email: params["email"]
@@ -15,7 +15,13 @@ class Api::V1::SessionsController < BaseApiController
   end
 
   def destroy
-    
+    if current_user
+      current_user.authentication_token = ""
+      current_user.save
+      render json: {}, status: :ok
+    else
+      return invalid_login_attempt
+    end
   end
 
   private
