@@ -5,6 +5,15 @@ class Api::V1::DivesController < BaseApiController
     render json: current_user.dives.as_json, status: :ok
   end
 
+  def show
+    dive = current_user.dives.find_by id: params[:id]
+    if dive.nil?
+      render json: {}, status: :not_found
+    else
+      render json: dive.as_json, status: :ok
+    end
+  end
+
   def create
     dive = current_user.dives.create(dive_params)
     if dive.valid?
