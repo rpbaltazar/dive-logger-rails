@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :registrations, only: [:create]
       resource :sessions, only: [:create, :destroy]
+      resources :users, only: [:index]
 
       resources :dives
     end
